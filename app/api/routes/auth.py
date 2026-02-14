@@ -1,4 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException, status
+from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from app.api.deps import get_db
@@ -14,6 +15,9 @@ router = APIRouter()
 def register(payload: RegisterRequest, db: Session = Depends(get_db)) -> TokenResponse:
     existing = db.query(User).filter(User.email == payload.email).first()
     if existing:
+        if verify_password(payload.password, existing.hashed_password):
+            token = create_access_token(subject=str(existing.id))
+            return TokenResponse(access_token=token)
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Email already exists")
 
     user = User(
@@ -23,7 +27,16 @@ def register(payload: RegisterRequest, db: Session = Depends(get_db)) -> TokenRe
         role=payload.role,
     )
     db.add(user)
-    db.commit()
+    try:
+        db.commit()
+    except IntegrityError:
+        db.rollback()
+        existing_after_race = db.query(User).filter(User.email == payload.email).first()
+        if existing_after_race and verify_password(payload.password, existing_after_race.hashed_password):
+            token = create_access_token(subject=str(existing_after_race.id))
+            return TokenResponse(access_token=token)
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail="Email already exists")
+
     db.refresh(user)
 
     token = create_access_token(subject=str(user.id))
