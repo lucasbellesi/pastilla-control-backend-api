@@ -1,13 +1,13 @@
 # Backend Pastilla Control
 
-API REST for PastillaControl using FastAPI + MariaDB.
+API REST for PastillaControl using FastAPI + PostgreSQL.
 
 ## Stack
 
 - FastAPI
 - SQLAlchemy 2.x
 - Alembic
-- MariaDB
+- PostgreSQL
 - JWT auth
 
 ## Quick start (Docker)
@@ -27,6 +27,14 @@ docker compose up --build
 3. API docs:
 
 - http://localhost:8000/docs
+
+4. PostgreSQL connection (host machine):
+
+- Host: `127.0.0.1`
+- Port: `5433`
+- Database: `pastilla_control`
+- User: `pastilla`
+- Password: `pastilla`
 
 ## Local run (without Docker)
 

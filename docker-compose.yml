@@ -1,19 +1,18 @@
 services:
   db:
-    image: mariadb:11.4
-    container_name: pastilla_mariadb
+    image: postgres:16-alpine
+    container_name: pastilla_postgres
     restart: unless-stopped
     environment:
-      MARIADB_ROOT_PASSWORD: root
-      MARIADB_DATABASE: pastilla_control
-      MARIADB_USER: pastilla
-      MARIADB_PASSWORD: pastilla
+      POSTGRES_DB: pastilla_control
+      POSTGRES_USER: pastilla
+      POSTGRES_PASSWORD: pastilla
     ports:
-      - "3307:3306"
+      - "5433:5432"
     volumes:
-      - mariadb_data:/var/lib/mysql
+      - postgres_data:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD", "mariadb-admin", "ping", "-h", "localhost", "-uroot", "-proot"]
+      test: ["CMD-SHELL", "pg_isready -U pastilla -d pastilla_control"]
       interval: 10s
       timeout: 5s
       retries: 10
@@ -34,4 +33,4 @@ services:
     command: uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
 
 volumes:
-  mariadb_data:
+  postgres_data:
