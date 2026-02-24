@@ -1,0 +1,34 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Prepare env file
+        run: cp .env.example .env
+
+      - name: Build and start services
+        run: docker compose up --build -d api
+
+      - name: Run test suite
+        run: docker compose exec -T api pytest -q
+
+      - name: Show logs on failure
+        if: failure()
+        run: docker compose logs --no-color
+
+      - name: Stop services
+        if: always()
+        run: docker compose down -v
