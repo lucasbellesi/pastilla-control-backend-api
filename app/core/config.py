@@ -1,3 +1,4 @@
+from pydantic import model_validator
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
 
@@ -17,6 +18,12 @@ class Settings(BaseSettings):
     JWT_ACCESS_TOKEN_EXPIRE_MINUTES: int = 60
 
     model_config = SettingsConfigDict(env_file=".env", case_sensitive=True)
+
+    @model_validator(mode="after")
+    def validate_security_settings(self) -> "Settings":
+        if self.APP_ENV.lower() != "dev" and self.JWT_SECRET_KEY == "change_this_secret":
+            raise ValueError("JWT_SECRET_KEY must be changed when APP_ENV is not dev")
+        return self
 
     @property
     def SQLALCHEMY_DATABASE_URI(self) -> str:

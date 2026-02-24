@@ -64,6 +64,7 @@ uvicorn app.main:app --reload
 
 - Docker startup runs `alembic upgrade head` before booting the API.
 - API responses include `X-Request-ID` and HTTP request logs include the same id.
+- `APP_ENV` values other than `dev` require a non-default `JWT_SECRET_KEY`.
 - This scaffold is intentionally minimal and production-safe defaults should be hardened:
   - rotate secrets
   - add refresh tokens
