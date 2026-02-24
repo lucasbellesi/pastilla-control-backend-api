@@ -1,5 +1,7 @@
 # Backend Pastilla Control
 
+[![CI](https://github.com/lucasbellesi/pastilla-control-backend-api/actions/workflows/ci.yml/badge.svg)](https://github.com/lucasbellesi/pastilla-control-backend-api/actions/workflows/ci.yml)
+
 API REST for PastillaControl using FastAPI + PostgreSQL.
 
 ## Stack
