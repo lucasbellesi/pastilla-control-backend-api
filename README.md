@@ -42,6 +42,7 @@ docker compose up --build
 python -m venv .venv
 source .venv/bin/activate
 pip install -r requirements.txt
+alembic upgrade head
 uvicorn app.main:app --reload
 ```
 
@@ -57,6 +58,7 @@ uvicorn app.main:app --reload
 
 ## Notes
 
+- Docker startup runs `alembic upgrade head` before booting the API.
 - This scaffold is intentionally minimal and production-safe defaults should be hardened:
   - rotate secrets
   - add refresh tokens
