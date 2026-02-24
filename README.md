@@ -49,7 +49,7 @@ uvicorn app.main:app --reload
 ## Core endpoints (MVP)
 
 - `POST /api/v1/auth/register`
-- `POST /api/v1/auth/login`
+- `POST /api/v1/auth/login` (OAuth2 form: `username`, `password`)
 - `GET /api/v1/medications`
 - `POST /api/v1/medications`
 - `GET /api/v1/schedules`
