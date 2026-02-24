@@ -57,6 +57,8 @@ uvicorn app.main:app --reload
 - `GET /api/v1/schedules`
 - `POST /api/v1/schedules`
 - `GET /api/v1/health`
+- `GET /api/v1/health/live`
+- `GET /api/v1/health/ready`
 
 ## Notes
 

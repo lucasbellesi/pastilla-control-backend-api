@@ -8,8 +8,7 @@ from app.db.session import SessionLocal
 router = APIRouter()
 
 
-@router.get("/")
-def health_check() -> dict[str, str]:
+def _check_db() -> None:
     db = SessionLocal()
     try:
         db.execute(text("SELECT 1"))
@@ -20,5 +19,21 @@ def health_check() -> dict[str, str]:
         ) from exc
     finally:
         db.close()
+
+
+@router.get("/live")
+def live_check() -> dict[str, str]:
+    return {"status": "ok"}
+
+
+@router.get("/ready")
+def ready_check() -> dict[str, str]:
+    _check_db()
+    return {"status": "ok", "db": "ok"}
+
+
+@router.get("/")
+def health_check() -> dict[str, str]:
+    _check_db()
 
     return {"status": "ok", "db": "ok"}
