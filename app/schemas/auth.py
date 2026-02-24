@@ -1,11 +1,13 @@
 from pydantic import BaseModel, EmailStr
 
+from app.models.enums import UserRole
+
 
 class RegisterRequest(BaseModel):
     email: EmailStr
     full_name: str
     password: str
-    role: str = "PATIENT"
+    role: UserRole = UserRole.PATIENT
 
 
 class TokenResponse(BaseModel):
