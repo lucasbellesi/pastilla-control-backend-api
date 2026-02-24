@@ -55,6 +55,10 @@ class ScheduleCreate(ScheduleBase):
         return self
 
 
+class ScheduleUpdate(ScheduleCreate):
+    pass
+
+
 class ScheduleOut(ScheduleBase):
     id: int
     model_config = ConfigDict(from_attributes=True)

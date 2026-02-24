@@ -151,3 +151,49 @@ def test_schedule_creation_and_listing_are_owner_scoped() -> None:
     ids_b = {item["id"] for item in list_b.json()}
     assert schedule_b in ids_b
     assert schedule_a not in ids_b
+
+    update_b_on_a = client.put(
+        f"/api/v1/schedules/{schedule_a}",
+        headers={"Authorization": f"Bearer {token_b}"},
+        json={
+            "medication_id": med_b,
+            "type": "DAILY",
+            "time_of_day": "10:00",
+            "days_of_week_mask": 0,
+            "interval_hours": None,
+            "timezone_id": "UTC",
+            "grace_minutes": 30,
+            "is_active": True,
+        },
+    )
+    assert update_b_on_a.status_code == 404
+
+    delete_b_on_a = client.delete(
+        f"/api/v1/schedules/{schedule_a}",
+        headers={"Authorization": f"Bearer {token_b}"},
+    )
+    assert delete_b_on_a.status_code == 404
+
+    update_a_on_a = client.put(
+        f"/api/v1/schedules/{schedule_a}",
+        headers={"Authorization": f"Bearer {token_a}"},
+        json={
+            "medication_id": med_a,
+            "type": "WEEKLY",
+            "time_of_day": "10:00",
+            "days_of_week_mask": 2,
+            "interval_hours": None,
+            "timezone_id": "UTC",
+            "grace_minutes": 45,
+            "is_active": True,
+        },
+    )
+    assert update_a_on_a.status_code == 200
+    assert update_a_on_a.json()["type"] == "WEEKLY"
+    assert update_a_on_a.json()["days_of_week_mask"] == 2
+
+    delete_a_on_a = client.delete(
+        f"/api/v1/schedules/{schedule_a}",
+        headers={"Authorization": f"Bearer {token_a}"},
+    )
+    assert delete_a_on_a.status_code == 204
