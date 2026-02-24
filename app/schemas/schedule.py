@@ -1,7 +1,7 @@
 from typing import Literal
 from zoneinfo import ZoneInfo, ZoneInfoNotFoundError
 
-from pydantic import BaseModel, Field, field_validator, model_validator
+from pydantic import BaseModel, ConfigDict, Field, field_validator, model_validator
 
 
 ScheduleType = Literal["DAILY", "WEEKLY", "INTERVAL"]
@@ -57,6 +57,4 @@ class ScheduleCreate(ScheduleBase):
 
 class ScheduleOut(ScheduleBase):
     id: int
-
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)

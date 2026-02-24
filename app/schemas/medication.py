@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 
 
 class MedicationBase(BaseModel):
@@ -19,6 +19,4 @@ class MedicationUpdate(MedicationBase):
 
 class MedicationOut(MedicationBase):
     id: int
-
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
